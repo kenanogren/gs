@@ -1084,6 +1084,15 @@
     <Content Include="Areas\Panel\Views\Shared\sample\stats.html" />
     <Content Include="Areas\Panel\Views\Shared\sample\tables.html" />
     <Content Include="Global.asax" />
+    <Content Include="Views\sample\blog-details.html" />
+    <Content Include="Views\sample\blog.html" />
+    <Content Include="Views\sample\cart.html" />
+    <Content Include="Views\sample\checkout.html" />
+    <Content Include="Views\sample\contact.html" />
+    <Content Include="Views\sample\index.html" />
+    <Content Include="Views\sample\product-details.html" />
+    <Content Include="Views\sample\product-grid.html" />
+    <Content Include="Views\sample\wishlist.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
