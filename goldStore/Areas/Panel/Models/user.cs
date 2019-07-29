@@ -15,13 +15,11 @@ namespace goldStore.Areas.Panel.Models
     public partial class user
     {
         public int userId { get; set; }
-        public string firstName { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
         public string password { get; set; }
         public string rePassword { get; set; }
         public string phone { get; set; }
-        public string address { get; set; }
         public string activationCode { get; set; }
         public string resetCode { get; set; }
         public string hostName { get; set; }
