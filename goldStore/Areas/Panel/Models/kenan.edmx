@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="goldstoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="goldstoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="brand">
           <Key>
             <PropertyRef Name="brandId" />
@@ -20,6 +20,23 @@
           <Property Name="categoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="categoryName" Type="varchar" MaxLength="50" />
           <Property Name="image" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="orderDetails">
+          <Key>
+            <PropertyRef Name="orderId" />
+            <PropertyRef Name="productId" />
+          </Key>
+          <Property Name="orderId" Type="int" Nullable="false" />
+          <Property Name="productId" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="orderId" />
+          </Key>
+          <Property Name="orderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customerId" Type="int" />
+          <Property Name="orderDate" Type="datetime" />
         </EntityType>
         <EntityType Name="product">
           <Key>
@@ -68,7 +85,30 @@
           <Property Name="loginTime" Type="datetime" />
           <Property Name="isMailVerified" Type="bit" />
           <Property Name="roleId" Type="int" />
+          <Property Name="city" Type="varchar" MaxLength="50" />
+          <Property Name="subscribe" Type="bit" />
         </EntityType>
+        <EntityType Name="wishlist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="productId" Type="int" />
+          <Property Name="userId" Type="int" />
+          <Property Name="created" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__orders__customer__49C3F6B7">
+          <End Role="user" Type="Self.user" Multiplicity="0..1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__product__brandId__15502E78">
           <End Role="brand" Type="Self.brand" Multiplicity="0..1" />
           <End Role="product" Type="Self.product" Multiplicity="*" />
@@ -117,13 +157,72 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__wishlist__produc__5070F446">
+          <End Role="product" Type="Self.product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="wishlist" Type="Self.wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="productId" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__wishlist__userId__5165187F">
+          <End Role="user" Type="Self.user" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="wishlist" Type="Self.wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fkOrders">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="orderDetails" Type="Self.orderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="orderId" />
+            </Principal>
+            <Dependent Role="orderDetails">
+              <PropertyRef Name="orderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fkProduct">
+          <End Role="product" Type="Self.product" Multiplicity="1" />
+          <End Role="orderDetails" Type="Self.orderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="productId" />
+            </Principal>
+            <Dependent Role="orderDetails">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="goldstoreModelStoreContainer">
           <EntitySet Name="brand" EntityType="Self.brand" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="category" EntityType="Self.category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="orderDetails" EntityType="Self.orderDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="product" EntityType="Self.product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="productImage" EntityType="Self.productImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="role" EntityType="Self.role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="user" EntityType="Self.user" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="wishlist" EntityType="Self.wishlist" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__orders__customer__49C3F6B7" Association="Self.FK__orders__customer__49C3F6B7">
+            <End Role="user" EntitySet="user" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
           <AssociationSet Name="FK__product__brandId__15502E78" Association="Self.FK__product__brandId__15502E78">
             <End Role="brand" EntitySet="brand" />
             <End Role="product" EntitySet="product" />
@@ -140,9 +239,24 @@
             <End Role="role" EntitySet="role" />
             <End Role="user" EntitySet="user" />
           </AssociationSet>
+          <AssociationSet Name="FK__wishlist__produc__5070F446" Association="Self.FK__wishlist__produc__5070F446">
+            <End Role="product" EntitySet="product" />
+            <End Role="wishlist" EntitySet="wishlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK__wishlist__userId__5165187F" Association="Self.FK__wishlist__userId__5165187F">
+            <End Role="user" EntitySet="user" />
+            <End Role="wishlist" EntitySet="wishlist" />
+          </AssociationSet>
+          <AssociationSet Name="fkOrders" Association="Self.fkOrders">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="orderDetails" EntitySet="orderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="fkProduct" Association="Self.fkProduct">
+            <End Role="product" EntitySet="product" />
+            <End Role="orderDetails" EntitySet="orderDetails" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="goldstoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -179,6 +293,8 @@
           <NavigationProperty Name="brand" Relationship="Self.FK__product__brandId__15502E78" FromRole="product" ToRole="brand" />
           <NavigationProperty Name="category" Relationship="Self.FK__product__categor__145C0A3F" FromRole="product" ToRole="category" />
           <NavigationProperty Name="productImage" Relationship="Self.FK__productIm__produ__182C9B23" FromRole="product" ToRole="productImage" />
+          <NavigationProperty Name="orderDetails" Relationship="goldstoreModel.fkProduct" FromRole="product" ToRole="orderDetails" />
+          <NavigationProperty Name="wishlist" Relationship="goldstoreModel.FK__wishlist__produc__5070F446" FromRole="product" ToRole="wishlist" />
         </EntityType>
         <EntityType Name="productImage">
           <Key>
@@ -217,6 +333,10 @@
           <Property Name="isMailVerified" Type="Boolean" />
           <Property Name="roleId" Type="Int32" />
           <NavigationProperty Name="role" Relationship="Self.FK__user__roleId__22AA2996" FromRole="user" ToRole="role" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="subscribe" Type="Boolean" />
+          <NavigationProperty Name="orders" Relationship="goldstoreModel.FK__orders__customer__49C3F6B7" FromRole="user" ToRole="orders" />
+          <NavigationProperty Name="wishlist" Relationship="goldstoreModel.FK__wishlist__userId__5165187F" FromRole="user" ToRole="wishlist" />
         </EntityType>
         <Association Name="FK__product__brandId__15502E78">
           <End Role="brand" Type="Self.brand" Multiplicity="0..1" />
@@ -289,7 +409,126 @@
             <End Role="role" EntitySet="role" />
             <End Role="user" EntitySet="user" />
           </AssociationSet>
+          <EntitySet Name="orderDetails" EntityType="goldstoreModel.orderDetails" />
+          <EntitySet Name="orders" EntityType="goldstoreModel.orders" />
+          <EntitySet Name="wishlist" EntityType="goldstoreModel.wishlist" />
+          <AssociationSet Name="fkOrders" Association="goldstoreModel.fkOrders">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="orderDetails" EntitySet="orderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="fkProduct" Association="goldstoreModel.fkProduct">
+            <End Role="product" EntitySet="product" />
+            <End Role="orderDetails" EntitySet="orderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orders__customer__49C3F6B7" Association="goldstoreModel.FK__orders__customer__49C3F6B7">
+            <End Role="user" EntitySet="user" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__wishlist__produc__5070F446" Association="goldstoreModel.FK__wishlist__produc__5070F446">
+            <End Role="product" EntitySet="product" />
+            <End Role="wishlist" EntitySet="wishlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK__wishlist__userId__5165187F" Association="goldstoreModel.FK__wishlist__userId__5165187F">
+            <End Role="user" EntitySet="user" />
+            <End Role="wishlist" EntitySet="wishlist" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="orderDetails">
+          <Key>
+            <PropertyRef Name="orderId" />
+            <PropertyRef Name="productId" />
+          </Key>
+          <Property Name="orderId" Type="Int32" Nullable="false" />
+          <Property Name="productId" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" />
+          <NavigationProperty Name="orders" Relationship="goldstoreModel.fkOrders" FromRole="orderDetails" ToRole="orders" />
+          <NavigationProperty Name="product" Relationship="goldstoreModel.fkProduct" FromRole="orderDetails" ToRole="product" />
+        </EntityType>
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="orderId" />
+          </Key>
+          <Property Name="orderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customerId" Type="Int32" />
+          <Property Name="orderDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="orderDetails" Relationship="goldstoreModel.fkOrders" FromRole="orders" ToRole="orderDetails" />
+          <NavigationProperty Name="user" Relationship="goldstoreModel.FK__orders__customer__49C3F6B7" FromRole="orders" ToRole="user" />
+        </EntityType>
+        <EntityType Name="wishlist">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="productId" Type="Int32" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="product" Relationship="goldstoreModel.FK__wishlist__produc__5070F446" FromRole="wishlist" ToRole="product" />
+          <NavigationProperty Name="user" Relationship="goldstoreModel.FK__wishlist__userId__5165187F" FromRole="wishlist" ToRole="user" />
+        </EntityType>
+        <Association Name="fkOrders">
+          <End Type="goldstoreModel.orders" Role="orders" Multiplicity="1" />
+          <End Type="goldstoreModel.orderDetails" Role="orderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="orderId" />
+            </Principal>
+            <Dependent Role="orderDetails">
+              <PropertyRef Name="orderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fkProduct">
+          <End Type="goldstoreModel.product" Role="product" Multiplicity="1" />
+          <End Type="goldstoreModel.orderDetails" Role="orderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="productId" />
+            </Principal>
+            <Dependent Role="orderDetails">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orders__customer__49C3F6B7">
+          <End Type="goldstoreModel.user" Role="user" Multiplicity="0..1" />
+          <End Type="goldstoreModel.orders" Role="orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="customerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__wishlist__produc__5070F446">
+          <End Type="goldstoreModel.product" Role="product" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="goldstoreModel.wishlist" Role="wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="product">
+              <PropertyRef Name="productId" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="productId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__wishlist__userId__5165187F">
+          <End Type="goldstoreModel.user" Role="user" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="goldstoreModel.wishlist" Role="wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user">
+              <PropertyRef Name="userId" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -348,6 +587,8 @@
           <EntitySetMapping Name="user">
             <EntityTypeMapping TypeName="goldstoreModel.user">
               <MappingFragment StoreEntitySet="user">
+                <ScalarProperty Name="subscribe" ColumnName="subscribe" />
+                <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="userId" ColumnName="userId" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
                 <ScalarProperty Name="email" ColumnName="email" />
@@ -363,6 +604,34 @@
                 <ScalarProperty Name="loginTime" ColumnName="loginTime" />
                 <ScalarProperty Name="isMailVerified" ColumnName="isMailVerified" />
                 <ScalarProperty Name="roleId" ColumnName="roleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="orderDetails">
+            <EntityTypeMapping TypeName="goldstoreModel.orderDetails">
+              <MappingFragment StoreEntitySet="orderDetails">
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="orders">
+            <EntityTypeMapping TypeName="goldstoreModel.orders">
+              <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="orderDate" ColumnName="orderDate" />
+                <ScalarProperty Name="customerId" ColumnName="customerId" />
+                <ScalarProperty Name="orderId" ColumnName="orderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="wishlist">
+            <EntityTypeMapping TypeName="goldstoreModel.wishlist">
+              <MappingFragment StoreEntitySet="wishlist">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="productId" ColumnName="productId" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

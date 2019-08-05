@@ -9,8 +9,10 @@ using System.Web.Mvc;
 
 namespace goldStore.Areas.Panel.Controllers
 {
+    [Authorize(Roles ="admin")]
     public class BrandController : Controller
     {
+        
         // GET: Panel/Brand
         BrandRepository repository = new BrandRepository(new goldstoreEntities());
 

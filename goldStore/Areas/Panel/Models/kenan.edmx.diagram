@@ -15,6 +15,14 @@
         <AssociationConnector Association="goldstoreModel.FK__product__categor__145C0A3F" ManuallyRouted="false" />
         <AssociationConnector Association="goldstoreModel.FK__productIm__produ__182C9B23" ManuallyRouted="false" />
         <AssociationConnector Association="goldstoreModel.FK__user__roleId__22AA2996" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="goldstoreModel.orderDetails" Width="1.5" PointX="8.25" PointY="2" />
+        <EntityTypeShape EntityType="goldstoreModel.orders" Width="1.5" PointX="6" PointY="15.25" />
+        <EntityTypeShape EntityType="goldstoreModel.wishlist" Width="1.5" PointX="10.25" PointY="8.125" />
+        <AssociationConnector Association="goldstoreModel.fkOrders" />
+        <AssociationConnector Association="goldstoreModel.fkProduct" />
+        <AssociationConnector Association="goldstoreModel.FK__orders__customer__49C3F6B7" />
+        <AssociationConnector Association="goldstoreModel.FK__wishlist__produc__5070F446" />
+        <AssociationConnector Association="goldstoreModel.FK__wishlist__userId__5165187F" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

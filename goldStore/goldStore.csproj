@@ -50,6 +50,12 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -1229,6 +1235,7 @@
     <Content Include="asset\js\vendor\modernizr-3.5.0.min.js" />
     <Content Include="asset\js\waypoints.min.js" />
     <Content Include="asset\style.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Global.asax" />
     <Content Include="Views\sample\blog-details.html" />
     <Content Include="Views\sample\blog.html" />
@@ -1243,6 +1250,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Panel\Controllers\AccountController.cs" />
     <Compile Include="Areas\Panel\Controllers\BrandController.cs" />
     <Compile Include="Areas\Panel\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Panel\Controllers\ProductController.cs" />
@@ -1277,17 +1285,24 @@
     <Compile Include="Areas\Panel\Models\Repository\BrandRepository.cs" />
     <Compile Include="Areas\Panel\Models\Repository\CategoryRepository.cs" />
     <Compile Include="Areas\Panel\Models\Repository\ProductRepository.cs" />
+    <Compile Include="Areas\Panel\Models\Repository\UserRepository.cs" />
     <Compile Include="Areas\Panel\Models\role.cs">
       <DependentUpon>kenan.tt</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Panel\Models\Security\Crypto.cs" />
     <Compile Include="Areas\Panel\Models\user.cs">
       <DependentUpon>kenan.tt</DependentUpon>
     </Compile>
     <Compile Include="Areas\Panel\PanelAreaRegistration.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\ViewModel\Login.cs" />
+    <Compile Include="Models\ViewModel\Register.cs" />
+    <Compile Include="Models\ViewModel\ResetPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1411,12 +1426,25 @@
     <Content Include="Areas\Panel\Models\kenan.edmx.diagram">
       <DependentUpon>kenan.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Panel\Views\Account\MyProfile.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\_Shared\_header.cshtml" />
     <Content Include="Views\_Shared\_footer.cshtml" />
     <Content Include="Views\_Shared\_layout.cshtml" />
     <Content Include="Views\Shop\Products.cshtml" />
     <Content Include="Views\Shop\PartialCategory.cshtml" />
+    <Content Include="Views\Shop\PartialPrice.cshtml" />
+    <Content Include="Views\Shop\ProductDetail.cshtml" />
+    <Content Include="Views\Shop\PartialNewArrivals.cshtml" />
+    <Content Include="Views\Shop\PartialBrands.cshtml" />
+    <Content Include="Views\User\PartialBrands.cshtml" />
+    <Content Include="Views\User\PartialCategory.cshtml" />
+    <Content Include="Views\User\PartialPrice.cshtml" />
+    <Content Include="Views\User\PartialNewArrivals.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\User\ForgotPassword.cshtml" />
+    <Content Include="Views\User\ResetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1426,7 +1454,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -14,6 +14,13 @@ namespace goldStore.Areas.Panel.Models
     
     public partial class user
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public user()
+        {
+            this.orders = new HashSet<orders>();
+            this.wishlist = new HashSet<wishlist>();
+        }
+    
         public int userId { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
@@ -29,7 +36,13 @@ namespace goldStore.Areas.Panel.Models
         public Nullable<System.DateTime> loginTime { get; set; }
         public Nullable<bool> isMailVerified { get; set; }
         public Nullable<int> roleId { get; set; }
+        public string city { get; set; }
+        public Nullable<bool> subscribe { get; set; }
     
         public virtual role role { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<orders> orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<wishlist> wishlist { get; set; }
     }
 }

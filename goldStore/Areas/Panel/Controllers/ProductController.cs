@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace goldStore.Areas.Panel.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class ProductController : Controller
     {
 
